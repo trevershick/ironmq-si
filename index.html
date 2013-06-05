@@ -1,3 +1,6 @@
+---
+title: Iron MQ Spring Integration Extensions
+---
 <!DOCTYPE html>
 <html>
 
@@ -18,7 +21,7 @@
         <header class="inner">
           <a id="forkme_banner" href="https://github.com/trevershick/ironmq-si">View on GitHub</a>
 
-          <h1 id="project_title">Ironmq-si</h1>
+          <h1 id="project_title">ironmq-si</h1>
           <h2 id="project_tagline">Iron IO Spring Integration Extensions</h2>
 
             <section id="downloads">
@@ -44,64 +47,68 @@
 <p>Both the inbound and outbound adapters require a client factory which is responsible for creating an instance of an <em>io.iron.ironmq.Client</em>.  This project provides a default implementation of the factory and a namespace handler.</p>
 
 <p>The example below shows the creation of a default client factory using SpEL to get the IronMQ projectId and token values.</p>
-
-<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;beans xmlns="http://www.springframework.org/schema/beans"
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:int-ironmq="http://trevershick.github.com/schema/integration/ironmq"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd"&gt;
+	http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd">
 
-    &lt;int-ironmq:default-client-factory id="clientFactory" ironmq-project="#{projectId}" ironmq-token="#{token}"/&gt;
+    <int-ironmq:default-client-factory id="clientFactory" ironmq-project="#{projectId}" ironmq-token="#{token}"/>
 
-&lt;/beans&gt;
-</code></pre>
+</beans>
+{% endhighlight %}
 
 <h3>
 <a name="configuring-the-inbound-channel-adapter" class="anchor" href="#configuring-the-inbound-channel-adapter"><span class="octicon octicon-link"></span></a>Configuring the Inbound Channel Adapter</h3>
 
 <p>Shown below is an example of an inbound channel adapter configuration.  I will skip the requisite beans root element and default-client-factory element as it is shown above in the docs.  The inbound queue can be defined either as a regular literal/SpEL at initialization or a SpEL expression evaluated each time receive() is called on the underlying <em>MessageSource</em>.</p>
 
-<pre><code>    &lt;int-ironmq:inbound-channel-adapter 
-        auto-startup="true" 
-        channel="ironmqInboundChannel" 
-        queue-name="queue1" client-factory="clientFactory"&gt;
-        &lt;int:poller fixed-rate="5000" /&gt;
-    &lt;/int-ironmq:inbound-channel-adapter&gt;
+{% highlight xml %}
 
-    &lt;!-- poller polling the queue name determined by the queue-name-expression --&gt;
-    &lt;int-ironmq:inbound-channel-adapter 
-        auto-startup="true" 
-        channel="ironmqInboundChannel" 
-        queue-name-expression="new String('whateverQueue')" client-factory="clientFactory"&gt;
-        &lt;int:poller fixed-rate="5000" /&gt;
-    &lt;/int-ironmq:inbound-channel-adapter&gt;
+<int-ironmq:inbound-channel-adapter 
+    auto-startup="true" 
+    channel="ironmqInboundChannel" 
+    queue-name="queue1" client-factory="clientFactory">
+    <int:poller fixed-rate="5000" />
+</int-ironmq:inbound-channel-adapter>
 
-</code></pre>
+<!-- poller polling the queue name determined by the queue-name-expression -->
+<int-ironmq:inbound-channel-adapter 
+    auto-startup="true" 
+    channel="ironmqInboundChannel" 
+    queue-name-expression="new String('whateverQueue')" client-factory="clientFactory">
+    <int:poller fixed-rate="5000" />
+</int-ironmq:inbound-channel-adapter>
+
+{% endhighlight %}
 
 <h3>
 <a name="configuring-the-outbound-channel-adapter" class="anchor" href="#configuring-the-outbound-channel-adapter"><span class="octicon octicon-link"></span></a>Configuring the Outbound Channel Adapter</h3>
 
 <p>Shown below is an example of an outbound channel adapter configuration. As above, I will skip the requisite beans root element.  The queue-name value is a literal value below, but you can use expressions as well that will be evaluated each time receive() is called on the underlying <em>MessageSource</em>.</p>
 
-<pre><code>    &lt;!-- uses the specified queue 'queue1' --&gt;
-    &lt;int-ironmq:outbound-channel-adapter id="out1" queue-name="queue1" client-factory="clientFactory" channel="c1" /&gt;
+{% highlight xml %}
+<!-- uses the specified queue 'queue1' -->
+<int-ironmq:outbound-channel-adapter id="out1" queue-name="queue1" client-factory="clientFactory" channel="c1" />
 
-    &lt;!-- pushes the message to the queue name based on the expression (in this case queue2) --&gt;
-    &lt;int-ironmq:outbound-channel-adapter id="out2" queue-name-expression="new String('queue2').toLowerCase()" client-factory="clientFactory" channel="c2" /&gt;
+<!-- pushes the message to the queue name based on the expression (in this case queue2) -->
+<int-ironmq:outbound-channel-adapter id="out2" queue-name-expression="new String('queue2').toLowerCase()" client-factory="clientFactory" channel="c2" />
 
-    &lt;!-- by default, the expression used is 'headers.ironmq_queue', so this --&gt;
-    &lt;!-- will send to whatever queue is identified in the message headers   --&gt;
-    &lt;int-ironmq:outbound-channel-adapter id="out3" client-factory="clientFactory" channel="c3" /&gt;
-</code></pre>
+<!-- by default, the expression used is 'headers.ironmq_queue', so this -->
+<!-- will send to whatever queue is identified in the message headers   -->
+<int-ironmq:outbound-channel-adapter id="out3" client-factory="clientFactory" channel="c3" />
+{% endhighlight %}
 
 <h3>
 <a name="caveats" class="anchor" href="#caveats"><span class="octicon octicon-link"></span></a>Caveats</h3>
 
 <p>The Iron MQ Java libraries used in this project were authored by <a href="https://github.com/iron-io" class="user-mention">@iron-io</a> but they're not yet available on a central maven repository.  You will need to install them into your local repository.  You can install the file (currently checked in to this project under repo/... yeah, i know) via the following command:</p>
 
-<pre><code>mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=ironmq-0.0.9.jar -DgroupId=io.iron -DartifactId=ironmq -Dversion=0.0.9 -Dpackaging=jar
-</code></pre>
+{% highlight xml %}
+mvn org.apache.maven.plugins:maven-install-plugin:2.3.1:install-file -Dfile=ironmq-0.0.9.jar -DgroupId=io.iron -DartifactId=ironmq -Dversion=0.0.9 -Dpackaging=jar
+{% endhighlight %}
 
 <h3>
 <a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
@@ -113,7 +120,7 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Ironmq-si maintained by <a href="https://github.com/trevershick">trevershick</a></p>
+        <p class="copyright">ironmq-si is maintained by <a href="https://github.com/trevershick">trevershick</a></p>
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
