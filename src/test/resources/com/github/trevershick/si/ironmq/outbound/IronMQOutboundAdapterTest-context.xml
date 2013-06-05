@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-ironmq="http://trevershick.github.com/schema/integration/ironmq"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd">
+
+	<bean id="mockClientFactory" class="com.github.trevershick.si.ironmq.inbound.MockClientFactory"/>
+	
+
+	<int:channel id="c1"/>
+	<int:channel id="c2"/>
+	<int:channel id="c3"/>
+
+	<int-ironmq:outbound-channel-adapter id="queue1ByName" queue-name="queue1" client-factory="mockClientFactory" channel="c1" />
+	<int-ironmq:outbound-channel-adapter id="queue2ByExpression" queue-name-expression="new String('queue2').toLowerCase()" client-factory="mockClientFactory" channel="c2" />
+	<int-ironmq:outbound-channel-adapter id="queue3FromHeaders" client-factory="mockClientFactory" channel="c3" />
+
+
+</beans>

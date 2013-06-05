@@ -12,19 +12,26 @@ import com.github.trevershick.si.ironmq.inbound.IronMqMessageSource;
 
 public class IronMqInboundChannelAdapterParser extends AbstractPollingInboundChannelAdapterParser {
 
+
 	@Override
 	protected BeanMetadataElement parseSource(Element element, ParserContext parserContext) {
 		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition( IronMqMessageSource.class );
 
-		IntegrationNamespaceUtils.setReferenceIfAttributeDefined(builder, element, "client-factory","clientFactory");
-		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, "extract-payload","extractPayload");
+		IntegrationNamespaceUtils.setReferenceIfAttributeDefined(builder, element, 
+				IronMqParserConstants.ATTRIBUTE_CLIENT_FACTORY, 
+				IronMqParserConstants.PROPERTY_CLIENT_FACTORY);
+		
+		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, 
+				IronMqParserConstants.ATTRIBUTE_EXTRACT_PAYLOAD,
+				IronMqParserConstants.PROPERTY_EXTRACT_PAYLOAD);
  		
 		final RootBeanDefinition queueNameExpressionDefinition =
 				IntegrationNamespaceUtils.createExpressionDefinitionFromValueOrExpression(
-						"queue-name", "queue-name-expression",
+						IronMqParserConstants.ATTRIBUTE_QUEUE_NAME, 
+						IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION,
 						parserContext, element, true);
 		
-		builder.addPropertyValue("queueNameExpression", queueNameExpressionDefinition );
+		builder.addPropertyValue(IronMqParserConstants.PROPERTY_QUEUE_NAME_EXPRESSION, queueNameExpressionDefinition );
 
 		return builder.getBeanDefinition();
 	}

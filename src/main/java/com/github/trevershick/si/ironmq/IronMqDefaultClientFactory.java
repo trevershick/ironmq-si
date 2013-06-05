@@ -4,13 +4,13 @@ import io.iron.ironmq.Client;
 
 import org.springframework.beans.factory.InitializingBean;
 
-public class DefaultIronMqClientFactory implements IronMqClientFactory, InitializingBean {
+public class IronMqDefaultClientFactory implements IronMqClientFactory, InitializingBean {
 
 	private volatile Client client;
 	private final String projectId;
 	private final String token;
 	
-	public DefaultIronMqClientFactory(String projectId, String token) {
+	public IronMqDefaultClientFactory(String projectId, String token) {
 		this.projectId = projectId;
 		this.token = token;
 	}

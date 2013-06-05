@@ -21,7 +21,7 @@ import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.trevershick.si.ironmq.DefaultIronMqClientFactory;
+import com.github.trevershick.si.ironmq.IronMqDefaultClientFactory;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,7 +29,7 @@ import com.github.trevershick.si.ironmq.DefaultIronMqClientFactory;
 @SuppressWarnings("unchecked")
 public class IronMQInboundAdapterTest {
 	@Autowired
-	DefaultIronMqClientFactory dimcf;
+	IronMqDefaultClientFactory dimcf;
 	
 	@Autowired
 	@Qualifier("ironmqInboundChannel")

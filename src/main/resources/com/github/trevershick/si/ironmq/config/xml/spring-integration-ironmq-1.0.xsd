@@ -6,10 +6,10 @@
 	targetNamespace="http://trevershick.github.com/schema/integration/ironmq"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-	<xsd:import namespace="http://www.springframework.org/schema/beans"/>
-	<xsd:import namespace="http://www.springframework.org/schema/tool"/>
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />
+	<xsd:import namespace="http://www.springframework.org/schema/tool" />
 	<xsd:import namespace="http://www.springframework.org/schema/integration"
-		schemaLocation="http://www.springframework.org/schema/integration/spring-integration.xsd"/>
+		schemaLocation="http://www.springframework.org/schema/integration/spring-integration.xsd" />
 
 	<xsd:annotation>
 		<xsd:documentation><![CDATA[
@@ -18,135 +18,191 @@
 	</xsd:annotation>
 
 
-		<xsd:element name="default-client-factory">
-			<xsd:annotation>
-				<xsd:documentation>
-					Defines a default client factory for use with the inbound-channel-adapter
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:complexType>
-				<xsd:attribute name="id" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Identifies the underlying Spring bean definition.
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-			
-				<xsd:attribute name="ironmq-project" type="xsd:string" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								The iron mq project id
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				<xsd:attribute name="ironmq-token" type="xsd:string" use="required">
-						<xsd:annotation>
-							<xsd:documentation>
-								The iron mq token value to use.
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				</xsd:complexType>
-		</xsd:element>
-
-		<xsd:element name="inbound-channel-adapter">
-			<xsd:annotation>
-				<xsd:documentation>
-					Defines an Inbound Channel Adapter that reads records from an Iron MQ Queue.
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:complexType>
-					<xsd:sequence>
-						<xsd:element ref="integration:poller" minOccurs="0" maxOccurs="1"/>
-					</xsd:sequence>
-					<xsd:attributeGroup ref="ironmqAdapterAttributes"/>
-					
-					<xsd:attribute name="queue-name" type="xsd:string">
-						<xsd:annotation>
-							<xsd:documentation>
-								The queue name to use from which to pull messages.
-								This attribute is mutually exclusive
-								with the 'queue-name-expression' attribute.
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-					<xsd:attribute name="queue-name-expression" type="xsd:string">
-						<xsd:annotation>
-							<xsd:documentation>
-								Spring Expression Language (SpEL) statement that
-								returns the desired queue name.
-
-								This attribute is mutually exclusive with the
-								'queue-name' attribute.
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:attribute>
-				<xsd:attribute name="extract-payload" default="true" use="optional">
-					<xsd:annotation>
-						<xsd:documentation>
-							Flag controlling the value extraction from the Iron MQ Message object. If
-							this is false the the io.iron.ironmq.Message is put onto the output channel
-							and not the payload.  Defaults to 'true'.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:union memberTypes="xsd:boolean xsd:string" />
-					</xsd:simpleType>
-				</xsd:attribute>
-				
-			</xsd:complexType>
-		</xsd:element>
-
-		<xsd:attributeGroup name="ironmqAdapterAttributes">
-			<xsd:annotation>
-				<xsd:documentation>
-					Common configuration for IronMQ adapters.
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:attribute name="id" type="xsd:string" use="optional">
+	<xsd:element name="default-client-factory">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines a default client factory for use with the inbound-channel-adapter
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="id" type="xsd:string" use="required">
 				<xsd:annotation>
 					<xsd:documentation>
 						Identifies the underlying Spring bean definition.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="channel" type="xsd:string" use="required">
+
+			<xsd:attribute name="ironmq-project" type="xsd:string"
+				use="required">
 				<xsd:annotation>
 					<xsd:documentation>
-						Reference to a MessageChannel that will be utilized to
-						"receive from" or "send to" messages depending on the
-						adapter type (e.g. inbound or outbound).
+						The iron mq project id
 					</xsd:documentation>
-					<xsd:appinfo>
-						<tool:annotation kind="ref">
-							<tool:expected-type type="org.springframework.integration.MessageChannel"/>
-						</tool:annotation>
-					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="client-factory" type="xsd:string" use="required">
+			<xsd:attribute name="ironmq-token" type="xsd:string"
+				use="required">
 				<xsd:annotation>
 					<xsd:documentation>
-						Client factory, you can create your own implementation or
-						you can use default-client-factory
+						The iron mq token value to use.
 					</xsd:documentation>
-					<xsd:appinfo>
-						<tool:annotation kind="ref">
-							<tool:expected-type type="io.trevershick.si.ironmq.IronMqClientFactory"/>
-						</tool:annotation>
-					</xsd:appinfo>
 				</xsd:annotation>
 			</xsd:attribute>
-			<xsd:attribute name="auto-startup" default="true" use="optional">
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="inbound-channel-adapter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Inbound Channel Adapter that reads records from an Iron MQ
+				Queue.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="integration:poller" minOccurs="0"
+					maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="ironmqAdapterAttributes" />
+
+			<xsd:attribute name="queue-name" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>
-						Flag indicating that the component should start automatically on startup (default is 'true').
+						The queue name to use from which to pull messages.
+						This attribute is mutually exclusive
+						with the 'queue-name-expression' attribute.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="queue-name-expression" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						Spring Expression Language (SpEL) statement that
+						returns the desired queue name.
+
+						This attribute is mutually exclusive with the
+						'queue-name' attribute.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="extract-payload" default="true"
+				use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						Flag controlling the value extraction from the Iron MQ Message object.
+						If
+						this is false the the io.iron.ironmq.Message is put onto the output
+						channel
+						and not the payload. Defaults to 'true'.
 					</xsd:documentation>
 				</xsd:annotation>
 				<xsd:simpleType>
-					<xsd:union memberTypes="xsd:boolean xsd:string"/>
+					<xsd:union memberTypes="xsd:boolean xsd:string" />
 				</xsd:simpleType>
 			</xsd:attribute>
-		</xsd:attributeGroup>
+
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:attributeGroup name="ironmqAdapterAttributes">
+		<xsd:annotation>
+			<xsd:documentation>
+				Common configuration for IronMQ adapters.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="xsd:string" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					Identifies the underlying Spring bean definition.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="channel" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Reference to a MessageChannel that will be utilized to
+					"receive from" or "send to" messages depending on the
+					adapter type (e.g. inbound or outbound).
+				</xsd:documentation>
+				<xsd:appinfo>
+					<tool:annotation kind="ref">
+						<tool:expected-type
+							type="org.springframework.integration.MessageChannel" />
+					</tool:annotation>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="client-factory" type="xsd:string"
+			use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Client factory, you can create your own implementation or
+					you can use default-client-factory
+				</xsd:documentation>
+				<xsd:appinfo>
+					<tool:annotation kind="ref">
+						<tool:expected-type type="io.trevershick.si.ironmq.IronMqClientFactory" />
+					</tool:annotation>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="auto-startup" default="true" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					Flag indicating that the component should start automatically on
+					startup (default is 'true').
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:union memberTypes="xsd:boolean xsd:string" />
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+
+
+	<xsd:element name="outbound-channel-adapter">
+		<xsd:annotation>
+			<xsd:documentation>
+				Defines an Outbound Channel Adapter that writes
+				messages to
+				Iron MQ Queues.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attributeGroup ref="ironmqAdapterAttributes" />
+
+			<xsd:attribute name="queue-name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						The queue name to use from which to pull messages.
+						This attribute is mutually exclusive
+						with the 'queue-name-expression' attribute. The
+						default expression is 'headers.ironmq_queue'
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="queue-name-expression" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						Spring Expression Language (SpEL) statement that
+						returns the desired queue name.
+
+						This attribute is mutually exclusive with the
+						'queue-name' attribute.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+
+			<xsd:attribute name="order">
+				<xsd:annotation>
+					<xsd:documentation>
+						Specifies the order for invocation when this
+						endpoint is
+						connected as a subscriber to SubscribableChannel.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
 </xsd:schema>

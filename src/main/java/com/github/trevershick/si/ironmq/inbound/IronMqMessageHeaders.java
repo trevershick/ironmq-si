@@ -6,4 +6,5 @@ public interface IronMqMessageHeaders {
 	final String EXPIRES_IN = PREFIX + "expiresIn";
 	final String ID = PREFIX + "id";
 	final String TIMEOUT = PREFIX + "timeout";
+	final String QUEUE = PREFIX + "queue";
 }
