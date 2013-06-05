@@ -116,8 +116,9 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
 	 * if we're not in a transaction, then delete the message from the queue upon consumption
 	 * @param q
 	 * @param message
+	 * @throws IOException 
 	 */
-	protected void registerSyncOrComplete(Queue q, io.iron.ironmq.Message message) {
+	protected void registerSyncOrComplete(Queue q, io.iron.ironmq.Message message) throws IOException {
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			logger.debug("Registering TransactionSynchronization for message id " + message.getId());
 			TransactionSynchronizationManager.registerSynchronization(
@@ -126,12 +127,8 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
 		}
 
 		logger.debug("TransactionSynchronization is not active, remove message from queue.");
-		try {
-			q.deleteMessage(message.getId());
-			logger.debug("TransactionSynchronization is not active, successfully removed message from the queue.");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		q.deleteMessage(message.getId());
+		logger.debug("TransactionSynchronization is not active, successfully removed message from the queue.");
 	}
 
 
