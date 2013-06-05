@@ -1,1 +1,1 @@
-http\://trevershick.io/schema/integration/ironmq=io.trevershick.si.ironmq.config.xml.IronMqNamespaceHandler
+http\://trevershick.github.com/schema/integration/ironmq=com.github.trevershick.si.ironmq.config.xml.IronMqNamespaceHandler

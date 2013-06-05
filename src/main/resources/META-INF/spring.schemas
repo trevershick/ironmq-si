@@ -1,2 +1,2 @@
-http\://trevershick.io/schema/integration/ironmq/spring-integration-ironmq-1.0.xsd=io/trevershick/si/ironmq/config/xml/spring-integration-ironmq-1.0.xsd
-http\://trevershick.io/schema/integration/ironmq/spring-integration-ironmq.xsd=io/trevershick/si/ironmq/config/xml/spring-integration-ironmq-1.0.xsd
+http\://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq-1.0.xsd=com/github/trevershick/si/ironmq/config/xml/spring-integration-ironmq-1.0.xsd
+http\://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd=com/github/trevershick/si/ironmq/config/xml/spring-integration-ironmq-1.0.xsd

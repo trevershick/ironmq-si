@@ -1,9 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.trevershick.si</groupId>
-	<artifactId>ironmq</artifactId>
+	<groupId>com.github.trevershick</groupId>
+	<artifactId>ironmq-si</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	
+	<!--  
+	this is unavoidable at this point. the ironmq dependencies are not available
+	anywhere except in source form.
+	http://stackoverflow.com/questions/3642023/having-a-3rd-party-jar-included-in-maven-shaded-jar-without-adding-it-to-local-r
+	 -->
+	<repositories>
+		<repository>
+			<id>repo</id>
+			<url>file://${basedir}/repo</url>
+		</repository>
+	</repositories>
 	<dependencies>
 
 		<dependency>
@@ -16,7 +28,7 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.3</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-core</artifactId>
@@ -47,6 +59,8 @@
 	</dependencies>
 	<name>Iron MQ Spring Integration Extensions</name>
 	<url>https://github.com/trevershick/ironmq-si</url>
+
+
 	<scm>
 		<url>https://github.com/trevershick/ironmq-si</url>
 	</scm>
@@ -58,4 +72,17 @@
 		<system>Travis CI</system>
 		<url>https://travis-ci.org/trevershick/ironmq-si</url>
 	</ciManagement>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

@@ -1,4 +1,4 @@
 # Tooling related information for the integration IronMq namespace
-http\://trevershick.io/schema/integration/ironmq@name=Integration IronMQ Namespace
-http\://trevershick.io/schema/integration/ironmq@prefix=int-ironmq
-http\://trevershick.io/schema/integration/ironmq@icon=io/trevershick/si/ironmq/config/xml/spring-integration-ironmq.gif
+http\://trevershick.github.com/schema/integration/ironmq@name=Integration IronMQ Namespace
+http\://trevershick.github.com/schema/integration/ironmq@prefix=int-ironmq
+http\://trevershick.github.com/schema/integration/ironmq@icon=com/github/trevershick/si/ironmq/config/xml/spring-integration-ironmq.gif
