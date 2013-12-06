@@ -22,7 +22,7 @@
 		<repository> 
 			<id>iron-io-repo</id> 
 			<name>Iron.io Maven repository on GitHub</name> 
-			<url>http://iron-io.github.com/maven/repository/</url> 
+			<url>http://iron-io.github.io/maven/repository/</url> 
 		</repository> 
 	</repositories> 
 	<dependencies>
