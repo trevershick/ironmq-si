@@ -18,23 +18,19 @@
 	  <artifactId>oss-parent</artifactId>
 	  <version>7</version>
 	</parent>
-	<!--  
-	this is unavoidable at this point. the ironmq dependencies are not available
-	anywhere except in source form.
-	http://stackoverflow.com/questions/3642023/having-a-3rd-party-jar-included-in-maven-shaded-jar-without-adding-it-to-local-r
-	 -->
-	<repositories>
-		<repository>
-			<id>repo</id>
-			<url>file://${basedir}/repo</url>
-		</repository>
-	</repositories>
+	<repositories> 
+		<repository> 
+			<id>iron-io-repo</id> 
+			<name>Iron.io Maven repository on GitHub</name> 
+			<url>http://iron-io.github.com/maven/repository/</url> 
+		</repository> 
+	</repositories> 
 	<dependencies>
 
 		<dependency>
-			<groupId>io.iron</groupId>
-			<artifactId>ironmq</artifactId>
-			<version>0.0.9</version>
+			<groupId>ironmq</groupId> 
+			<artifactId>ironmq</artifactId> 
+			<version>0.0.10</version> 
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
