@@ -10,41 +10,41 @@ import org.springframework.beans.factory.InitializingBean;
 
 public class IronMqDefaultClientFactory implements IronMqClientFactory, InitializingBean {
 
-	private volatile Client client;
-	private final String projectId;
-	private final String token;
-	private final String cloud;
+  private volatile Client client;
+  private final String projectId;
+  private final String token;
+  private final String cloud;
 
-	public IronMqDefaultClientFactory(String projectId, String token, String cloud) {
-		this.projectId = projectId;
-		this.token = token;
-		this.cloud = cloud;
-	}
+  public IronMqDefaultClientFactory(String projectId, String token, String cloud) {
+    this.projectId = projectId;
+    this.token = token;
+    this.cloud = cloud;
+  }
 
-	public Client getClient() {
-		return client;
-	}
+  public Client getClient() {
+    return client;
+  }
 
-	public void afterPropertiesSet() throws Exception {
-		client = new Client(projectId, token, cloud());
-	}
+  public void afterPropertiesSet() throws Exception {
+    client = new Client(projectId, token, cloud());
+  }
 
-	private Cloud cloud() throws MalformedURLException {
-		if (StringUtils.isBlank(this.cloud)) { return null; }
-		return new Cloud(cloud);
-	}
+  private Cloud cloud() throws MalformedURLException {
+    if (StringUtils.isBlank(this.cloud)) {
+      return null;
+    }
+    return new Cloud(cloud);
+  }
 
-	public String getCloud() {
-		return cloud;
-	}
+  public String getCloud() {
+    return cloud;
+  }
 
-	public String getProjectId() {
-		return projectId;
-	}
+  public String getProjectId() {
+    return projectId;
+  }
 
-	public String getToken() {
-		return token;
-	}
-
-	
+  public String getToken() {
+    return token;
+  }
 }

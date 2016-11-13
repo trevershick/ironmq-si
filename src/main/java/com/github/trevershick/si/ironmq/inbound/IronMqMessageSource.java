@@ -23,36 +23,31 @@ import com.github.trevershick.si.ironmq.IronMqClientFactory;
 public class IronMqMessageSource extends IntegrationObjectSupport implements MessageSource<Serializable> {
 
   private volatile int reservationInSeconds = 60;
-	private volatile boolean extractPayload = true;
-	
-	private volatile IronMqClientFactory clientFactory;
-	/**
-	 * evaluated on every call to the {@link #receive()} method.
-	 */
-	private volatile Expression queueNameExpression;
-	
-	private volatile StandardEvaluationContext evaluationContext;
+  private volatile boolean extractPayload = true;
 
-	
-	
-	public IronMqClientFactory getClientFactory() {
-		return clientFactory;
-	}
+  private volatile IronMqClientFactory clientFactory;
+  /**
+   * evaluated on every call to the {@link #receive()} method.
+   */
+  private volatile Expression queueNameExpression;
 
+  private volatile StandardEvaluationContext evaluationContext;
 
-	public void setClientFactory(IronMqClientFactory clientFactory) {
-		this.clientFactory = clientFactory;
-	}
+  public IronMqClientFactory getClientFactory() {
+    return clientFactory;
+  }
 
+  public void setClientFactory(IronMqClientFactory clientFactory) {
+    this.clientFactory = clientFactory;
+  }
 
-	public boolean isExtractPayload() {
-		return extractPayload;
-	}
+  public boolean isExtractPayload() {
+    return extractPayload;
+  }
 
-
-	public void setExtractPayload(boolean extractPayload) {
-		this.extractPayload = extractPayload;
-	}
+  public void setExtractPayload(boolean extractPayload) {
+    this.extractPayload = extractPayload;
+  }
 
   public int getReservationInSeconds() {
     return reservationInSeconds;
@@ -63,116 +58,123 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
   }
 
   @Override
-	protected void onInit() throws Exception {
-		super.onInit();
-		if (getBeanFactory() != null) {
-			evaluationContext = ExpressionUtils.createStandardEvaluationContext(getBeanFactory());
-		} else {
-			evaluationContext = ExpressionUtils.createStandardEvaluationContext();
-		}
-	}
+  protected void onInit() throws Exception {
+    super.onInit();
+    if (getBeanFactory() != null) {
+      evaluationContext = ExpressionUtils.createStandardEvaluationContext(getBeanFactory());
+    }
+    else {
+      evaluationContext = ExpressionUtils.createStandardEvaluationContext();
+    }
+  }
 
+  @Override
+  public String getComponentType() {
+    return "ironmq:inbound-channel-adapter";
+  }
 
-	@Override
-	public String getComponentType() {
-		return "ironmq:inbound-channel-adapter";
-	}
+  public void setQueueNameExpression(Expression qnExpression) {
+    this.queueNameExpression = qnExpression;
+  }
 
-	public void setQueueNameExpression(Expression qnExpression) {
-		this.queueNameExpression = qnExpression;
-	}
-	
+  public Message<Serializable> receive() {
+    final String queueName = queueNameExpression.getValue(evaluationContext, String.class);
+    final Client client = clientFactory.getClient();
+    if (client == null) {
+      logger.warn("Unable to obtain client from factory " + clientFactory);
+      return null;
+    }
+    final Queue q = client.queue(queueName);
+    if (q == null) {
+      logger.warn("Unable to obtain queue " + queueName + " from client " + client);
+      return null;
+    }
+    try {
 
-	public Message<Serializable> receive() {
-		final String queueName = queueNameExpression.getValue( evaluationContext, String.class );
-		final Client client = clientFactory.getClient();
-		if (client == null) {
-			logger.warn("Unable to obtain client from factory " + clientFactory);
-			return null;
-		}
-		final Queue q = client.queue(queueName);
-		if (q == null) {
-			logger.warn("Unable to obtain queue " + queueName + " from client " + client);
-			return null;
-		}
-		try {
-		
-			io.iron.ironmq.Messages messages = q.reserve(1, getReservationInSeconds());
+      io.iron.ironmq.Messages messages = q.reserve(1, getReservationInSeconds());
       if (messages.getSize() == 0) {
         return null;
       }
       final io.iron.ironmq.Message message = messages.getMessage(0);
-			
-			MessageBuilder b = MessageBuilder.withPayload( extractPayload ? message.getBody() : message );
-			b.setHeader(IronMqMessageHeaders.ID, message.getId());
+
+      MessageBuilder b = MessageBuilder.withPayload(extractPayload ? message.getBody() : message);
+      b.setHeader(IronMqMessageHeaders.ID, message.getId());
       b.setHeader(IronMqMessageHeaders.RESERVATION_ID, message.getReservationId());
-			try {
-				b.setHeader(IronMqMessageHeaders.DELAY, message.getDelay());
-			} catch (Exception e) {}
-			try {
-			  b.setHeader(IronMqMessageHeaders.EXPIRES_IN, message.getExpiresIn());
-		  } catch (Exception e) {}
-			try {
-			  b.setHeader(IronMqMessageHeaders.TIMEOUT, message.getTimeout());
-		  } catch (Exception e) {}
-			final Message m = b.build();
-			
-			registerSyncOrComplete(q, message);
+      try {
+        b.setHeader(IronMqMessageHeaders.DELAY, message.getDelay());
+      }
+      catch (Exception e) {
+      }
+      try {
+        b.setHeader(IronMqMessageHeaders.EXPIRES_IN, message.getExpiresIn());
+      }
+      catch (Exception e) {
+      }
+      try {
+        b.setHeader(IronMqMessageHeaders.TIMEOUT, message.getTimeout());
+      }
+      catch (Exception e) {
+      }
+      final Message m = b.build();
 
-		
-			return m;
-		} catch (EmptyQueueException e) {
-			return null;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+      registerSyncOrComplete(q, message);
 
-	/**
-	 * If we're in a transaction, register a transaction synchronization to delete the 
-	 * message upon commit.
-	 * 
-	 * if we're not in a transaction, then delete the message from the queue upon consumption
-	 * @param q
-	 * @param message
-	 * @throws IOException 
-	 */
-	protected void registerSyncOrComplete(Queue q, io.iron.ironmq.Message message) throws IOException {
-		if (TransactionSynchronizationManager.isSynchronizationActive()) {
-			logger.debug("Registering TransactionSynchronization for message id " + message.getId());
-			TransactionSynchronizationManager.registerSynchronization(
-					new IronMqMessageTransactionSynchronization(q, message));
-			return;
-		}
-
-		logger.debug("TransactionSynchronization is not active, remove message from queue.");
-    if (message.getReservationId() != null) {
-		  q.deleteMessage(message.getId(), message.getReservationId());
+      return m;
     }
-		logger.debug("TransactionSynchronization is not active, successfully removed message from the queue.");
-	}
+    catch (EmptyQueueException e) {
+      return null;
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
+  /**
+   * If we're in a transaction, register a transaction synchronization to delete the
+   * message upon commit.
+   * <p>
+   * if we're not in a transaction, then delete the message from the queue upon consumption
+   *
+   * @param q the queue
+   * @param message the message being registered
+   * @throws IOException if message deletion fails
+   */
+  protected void registerSyncOrComplete(Queue q, io.iron.ironmq.Message message) throws IOException {
+    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+      logger.debug("Registering TransactionSynchronization for message id " + message.getId());
+      TransactionSynchronizationManager.registerSynchronization(
+        new IronMqMessageTransactionSynchronization(q, message));
+      return;
+    }
 
-	private final class IronMqMessageTransactionSynchronization extends TransactionSynchronizationAdapter {
-		private final String messageId;
-		private final Queue queue;
+    logger.debug("TransactionSynchronization is not active, remove message from queue.");
+    if (message.getReservationId() != null) {
+      q.deleteMessage(message.getId(), message.getReservationId());
+    }
+    logger.debug("TransactionSynchronization is not active, successfully removed message from the queue.");
+  }
 
-		IronMqMessageTransactionSynchronization(Queue queue, io.iron.ironmq.Message msg) {
-			Assert.notNull(msg, "Message should not be null");
-			Assert.notNull(queue, "Queue should not be null");
-			this.messageId = msg.getId();
-			this.queue = queue;
-		}
+  private final class IronMqMessageTransactionSynchronization extends TransactionSynchronizationAdapter {
+    private final String messageId;
+    private final Queue queue;
 
-		@Override
-		public void afterCommit() {
-			try {
-				logger.debug("Transaction Committed, deleting message " + this.messageId);
-				queue.deleteMessage(this.messageId);
-				logger.debug("Transaction Committed, deleted message " + this.messageId + " successfully");
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+    IronMqMessageTransactionSynchronization(Queue queue, io.iron.ironmq.Message msg) {
+      Assert.notNull(msg, "Message should not be null");
+      Assert.notNull(queue, "Queue should not be null");
+      this.messageId = msg.getId();
+      this.queue = queue;
+    }
+
+    @Override
+    public void afterCommit() {
+      try {
+        logger.debug("Transaction Committed, deleting message " + this.messageId);
+        queue.deleteMessage(this.messageId);
+        logger.debug("Transaction Committed, deleted message " + this.messageId + " successfully");
+      }
+      catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
 }

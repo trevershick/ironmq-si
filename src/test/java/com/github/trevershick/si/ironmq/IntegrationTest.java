@@ -24,8 +24,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.trevershick.si.ironmq.inbound.IronMqMessageHeaders;
-
 /**
  * Created by tshick on 11/12/16.
  */
@@ -39,39 +37,37 @@ public class IntegrationTest {
   @Autowired
   @Qualifier("inboundChannel")
   PollableChannel inbound;
-  
+
   @Autowired
   @Qualifier("ironMqClient")
   Client client;
-  
+
   @Before
   @After
   public void clearQueue() throws IOException {
     final Queue q = client.queue("int-test");
     q.clear();
   }
-  
+
   @Test
   public void putAndGet() throws IOException {
     Assume.assumeThat("IRONMQ_PROJECT should be set",
       System.getenv("IRONMQ_PROJECT"), is(not(nullValue())));
-    Assume.assumeThat("IRONMQ_TOKEN should be set", 
+    Assume.assumeThat("IRONMQ_TOKEN should be set",
       System.getenv("IRONMQ_TOKEN"), is(not(nullValue())));
-    Assume.assumeThat("IRONMQ_CLOUD_URL should be set", 
+    Assume.assumeThat("IRONMQ_CLOUD_URL should be set",
       System.getenv("IRONMQ_CLOUD_URL"), is(not(nullValue())));
-    
+
     final String contents = "message-" + System.currentTimeMillis();
-    
+
     final Message<String> m = MessageBuilder
       .withPayload(contents)
       .build();
     outbound.send(m);
 
-    
     final Message<?> received = inbound.receive();
     String in = (String) received.getPayload();
-    
+
     assertThat(in, is(contents));
   }
-  
 }

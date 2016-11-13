@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:int="http://www.springframework.org/schema/integration"
-	xmlns:int-ironmq="http://trevershick.github.com/schema/integration/ironmq"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-ironmq="http://trevershick.github.com/schema/integration/ironmq"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd">
 
-	<bean id="mockClientFactory" class="com.github.trevershick.si.ironmq.inbound.MockClientFactory"/>
-	
-	<bean class="java.lang.String" id="projectId">
-		<constructor-arg><value>thepid</value></constructor-arg>
-	</bean>
-	<int-ironmq:default-client-factory id="dcf" ironmq-project="#{projectId}" ironmq-token="tkn"/>
+  <bean id="mockClientFactory" class="com.github.trevershick.si.ironmq.inbound.MockClientFactory"/>
 
-	<int:channel id="ironmqInboundChannel">
-		<int:queue />
-	</int:channel>
+  <bean class="java.lang.String" id="projectId">
+    <constructor-arg>
+      <value>thepid</value>
+    </constructor-arg>
+  </bean>
+  <int-ironmq:default-client-factory id="dcf" ironmq-project="#{projectId}" ironmq-token="tkn"/>
 
-	<int-ironmq:inbound-channel-adapter id="ironmqInQueueName"
-		auto-startup="false" 
-		channel="ironmqInboundChannel" 
-		queue-name="queue1" client-factory="mockClientFactory">
-		<int:poller fixed-rate="100" />
-	</int-ironmq:inbound-channel-adapter>
-	
+  <int:channel id="ironmqInboundChannel">
+    <int:queue/>
+  </int:channel>
 
-	<int-ironmq:inbound-channel-adapter id="ironmqQueueExpr" channel="ironmqInboundChannel"
-		auto-startup="false" 
-		queue-name-expression="new String('queue2').toLowerCase()"
-		client-factory="mockClientFactory">
-		<int:poller fixed-rate="100" />
-	</int-ironmq:inbound-channel-adapter>
+  <int-ironmq:inbound-channel-adapter id="ironmqInQueueName"
+                                      auto-startup="false"
+                                      channel="ironmqInboundChannel"
+                                      queue-name="queue1" client-factory="mockClientFactory">
+    <int:poller fixed-rate="100"/>
+  </int-ironmq:inbound-channel-adapter>
 
-	<int-ironmq:inbound-channel-adapter id="ironmqInUnwrapped"
-		auto-startup="false" 
-		channel="ironmqInboundChannel" 
-		queue-name="queue3" client-factory="mockClientFactory" extract-payload="false">
-		<int:poller fixed-rate="100" />
-	</int-ironmq:inbound-channel-adapter>
 
-	<int-ironmq:inbound-channel-adapter id="ironmqInTx"
-		auto-startup="false" 
-		channel="ironmqInboundChannel" 
-		queue-name="queuetx" client-factory="mockClientFactory" extract-payload="false">
-		<int:poller fixed-rate="100">
-			<int:transactional />
-		</int:poller>
-	</int-ironmq:inbound-channel-adapter>
-	
-	<bean id="transactionManager" class="org.springframework.integration.transaction.PseudoTransactionManager"/>
+  <int-ironmq:inbound-channel-adapter id="ironmqQueueExpr" channel="ironmqInboundChannel"
+                                      auto-startup="false"
+                                      queue-name-expression="new String('queue2').toLowerCase()"
+                                      client-factory="mockClientFactory">
+    <int:poller fixed-rate="100"/>
+  </int-ironmq:inbound-channel-adapter>
+
+  <int-ironmq:inbound-channel-adapter id="ironmqInUnwrapped"
+                                      auto-startup="false"
+                                      channel="ironmqInboundChannel"
+                                      queue-name="queue3" client-factory="mockClientFactory" extract-payload="false">
+    <int:poller fixed-rate="100"/>
+  </int-ironmq:inbound-channel-adapter>
+
+  <int-ironmq:inbound-channel-adapter id="ironmqInTx"
+                                      auto-startup="false"
+                                      channel="ironmqInboundChannel"
+                                      queue-name="queuetx" client-factory="mockClientFactory" extract-payload="false">
+    <int:poller fixed-rate="100">
+      <int:transactional/>
+    </int:poller>
+  </int-ironmq:inbound-channel-adapter>
+
+  <bean id="transactionManager" class="org.springframework.integration.transaction.PseudoTransactionManager"/>
 </beans>

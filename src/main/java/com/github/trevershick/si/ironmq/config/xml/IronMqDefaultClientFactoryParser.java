@@ -10,12 +10,12 @@ import com.github.trevershick.si.ironmq.IronMqDefaultClientFactory;
 
 public class IronMqDefaultClientFactoryParser extends AbstractBeanDefinitionParser {
 
-	@Override
-	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition( IronMqDefaultClientFactory.class );
-		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_PROJECT_ID));
-		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_TOKEN));
-		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_CLOUD));
-		return builder.getBeanDefinition();
-	}
+  @Override
+  protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
+    final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(IronMqDefaultClientFactory.class);
+    builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_PROJECT_ID));
+    builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_TOKEN));
+    builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_CLOUD));
+    return builder.getBeanDefinition();
+  }
 }

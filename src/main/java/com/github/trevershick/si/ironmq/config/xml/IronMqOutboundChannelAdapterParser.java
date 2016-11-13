@@ -14,45 +14,41 @@ import com.github.trevershick.si.ironmq.outbound.IronMqQueueingMessageHandler;
 
 public class IronMqOutboundChannelAdapterParser extends AbstractOutboundChannelAdapterParser {
 
-	/**
-	 * Creates the "int-ironmq:outbound-channel-adapter" bean definition.
-	 * 
-	 * {@inheritDoc}
-	 * 
-	 */
-	@Override
-	protected AbstractBeanDefinition parseConsumer(Element element,
-			ParserContext parserContext) {
-		final BeanDefinitionBuilder builder = BeanDefinitionBuilder
-				.genericBeanDefinition(IronMqQueueingMessageHandler.class);
-		
-		
-		IntegrationNamespaceUtils.setReferenceIfAttributeDefined(builder, element, 
-				IronMqParserConstants.ATTRIBUTE_CLIENT_FACTORY, 
-				IronMqParserConstants.PROPERTY_CLIENT_FACTORY);
-		
-		final boolean hasQueueName = element.hasAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME);
-		final boolean hasQueueNameExpression = element.hasAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION);
-		if (hasQueueName && hasQueueNameExpression) {
-			parserContext.getReaderContext().error(
-					String.format("At most one of '%s' or '%s' is allowed", 
-							IronMqParserConstants.ATTRIBUTE_QUEUE_NAME, 
-							IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION)
-					, element);
-		}
-		if (hasQueueName) {
-			builder.addPropertyValue(IronMqParserConstants.PROPERTY_QUEUE_NAME,
-					new TypedStringValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME)));
-		}
-		if (hasQueueNameExpression) {
-			RootBeanDefinition expressionDef = new RootBeanDefinition(ExpressionFactoryBean.class);
-			expressionDef.getConstructorArgumentValues().addGenericArgumentValue(
-					element.getAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION));
-			builder.addPropertyValue(IronMqParserConstants.PROPERTY_QUEUE_NAME_EXPRESSION, expressionDef);
-		}
-		
+  /**
+   * Creates the "int-ironmq:outbound-channel-adapter" bean definition.
+   * <p>
+   * {@inheritDoc}
+   */
+  @Override
+  protected AbstractBeanDefinition parseConsumer(Element element,
+    ParserContext parserContext) {
+    final BeanDefinitionBuilder builder = BeanDefinitionBuilder
+      .genericBeanDefinition(IronMqQueueingMessageHandler.class);
 
-		return builder.getBeanDefinition();
-	}
+    IntegrationNamespaceUtils.setReferenceIfAttributeDefined(builder, element,
+      IronMqParserConstants.ATTRIBUTE_CLIENT_FACTORY,
+      IronMqParserConstants.PROPERTY_CLIENT_FACTORY);
 
+    final boolean hasQueueName = element.hasAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME);
+    final boolean hasQueueNameExpression = element.hasAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION);
+    if (hasQueueName && hasQueueNameExpression) {
+      parserContext.getReaderContext().error(
+        String.format("At most one of '%s' or '%s' is allowed",
+          IronMqParserConstants.ATTRIBUTE_QUEUE_NAME,
+          IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION)
+        , element);
+    }
+    if (hasQueueName) {
+      builder.addPropertyValue(IronMqParserConstants.PROPERTY_QUEUE_NAME,
+        new TypedStringValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME)));
+    }
+    if (hasQueueNameExpression) {
+      RootBeanDefinition expressionDef = new RootBeanDefinition(ExpressionFactoryBean.class);
+      expressionDef.getConstructorArgumentValues().addGenericArgumentValue(
+        element.getAttribute(IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION));
+      builder.addPropertyValue(IronMqParserConstants.PROPERTY_QUEUE_NAME_EXPRESSION, expressionDef);
+    }
+
+    return builder.getBeanDefinition();
+  }
 }
