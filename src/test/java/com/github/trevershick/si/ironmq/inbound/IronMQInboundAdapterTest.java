@@ -1,5 +1,6 @@
 package com.github.trevershick.si.ironmq.inbound;
 
+import static com.sun.org.apache.xml.internal.serializer.utils.Utils.messages;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
@@ -84,9 +86,11 @@ public class IronMQInboundAdapterTest {
 		message.setDelay(0);
 		message.setTimeout(0);
 		message.setExpiresIn(1000);
+		message.setReservationId("rid");
 
-
-		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
+		when(queue1.reserve(Mockito.anyInt(),Mockito.anyInt()))
+			.thenReturn(new io.iron.ironmq.Messages(message))
+			.thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
 		// this blocks until the message arrives.
@@ -94,7 +98,7 @@ public class IronMQInboundAdapterTest {
 		final Message<String> received = (Message<String>) inboundChannel.receive();
 		this.adapter1.stop();
 		
-		verify(queue1).deleteMessage("theid");
+		verify(queue1).deleteMessage("theid","rid");
 		assertEquals("xxx", received.getPayload());
 	}
 
@@ -112,9 +116,11 @@ public class IronMQInboundAdapterTest {
 		message.setDelay(0);
 		message.setTimeout(0);
 		message.setExpiresIn(1000);
+		message.setReservationId("rid");
 
-
-		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
+		when(queue1.reserve(Mockito.anyInt(),Mockito.anyInt()))
+			.thenReturn(new io.iron.ironmq.Messages(message))
+			.thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
 		// this blocks until the message arrives.
@@ -123,7 +129,7 @@ public class IronMQInboundAdapterTest {
 		this.adapter2.stop();
 
 		assertNotNull("Should have received a message on the channel", received);
-		verify(queue1).deleteMessage("theid2");
+		verify(queue1).deleteMessage("theid2","rid");
 		assertEquals("xxx2", received.getPayload());
 	}
 	
@@ -135,13 +141,16 @@ public class IronMQInboundAdapterTest {
 		
 		when(mockClient.queue("queue3")).thenReturn(queue1);
 		
+		
 		io.iron.ironmq.Message message = new io.iron.ironmq.Message();
 		message.setId("theid3");
 		message.setBody("xxx3");
 		message.setDelay(0);
 		message.setTimeout(0);
 		message.setExpiresIn(1000);
-		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
+		message.setReservationId("rid");
+		when(queue1.reserve(Mockito.anyInt(),Mockito.anyInt()))
+			.thenReturn(new io.iron.ironmq.Messages(message)).thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
 		// this blocks until the message arrives.
@@ -150,7 +159,7 @@ public class IronMQInboundAdapterTest {
 		this.adapter3.stop();
 
 		assertNotNull("Should have received a message on the channel", received);
-		verify(queue1).deleteMessage("theid3");
+		verify(queue1).deleteMessage("theid3","rid");
 
 		assertEquals("xxx3",received.getPayload().getBody());
 		assertEquals("theid3", received.getPayload().getId());
@@ -171,7 +180,9 @@ public class IronMQInboundAdapterTest {
 		message.setTimeout(0);
 		message.setExpiresIn(1000);
 
-		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
+		when(queue1.reserve(Mockito.anyInt(),Mockito.anyInt()))
+			.thenReturn(new io.iron.ironmq.Messages(message))
+			.thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
 		// this blocks until the message arrives.

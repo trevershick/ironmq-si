@@ -5,6 +5,7 @@ import io.iron.ironmq.Cloud;
 
 import java.net.MalformedURLException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 public class IronMqDefaultClientFactory implements IronMqClientFactory, InitializingBean {
@@ -29,7 +30,7 @@ public class IronMqDefaultClientFactory implements IronMqClientFactory, Initiali
 	}
 
 	private Cloud cloud() throws MalformedURLException {
-		if (this.cloud == null) { return null; }
+		if (StringUtils.isBlank(this.cloud)) { return null; }
 		return new Cloud(cloud);
 	}
 

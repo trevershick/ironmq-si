@@ -7,13 +7,18 @@
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd">
 
-
+	<bean id="propertyPlaceholderConfigurer"
+	      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="searchSystemEnvironment" value="true" />
+	</bean>
+	
 	<bean id="ironMqClient" factory-bean="ironMqClientFactory" factory-method="getClient"/>
 	
 	<int-ironmq:default-client-factory id="ironMqClientFactory" 
-					   ironmq-project="#{systemProperties['IRONMQ_PROJECT']}" 
-					   ironmq-token="#{systemProperties['IRONMQ_TOKEN']}"
-					   ironmq-cloud-url="#{systemProperties['IRONMQ_CLOUD_URL']}" />
+					   ironmq-project="${IRONMQ_PROJECT}" 
+					   ironmq-token="${IRONMQ_TOKEN}"
+					   ironmq-cloud-url="${IRONMQ_CLOUD_URL}" />
 
 	<int:channel id="outboundChannel"/>
 

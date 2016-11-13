@@ -54,11 +54,11 @@ public class IntegrationTest {
   @Test
   public void putAndGet() throws IOException {
     Assume.assumeThat("IRONMQ_PROJECT should be set",
-      System.getProperty("IRONMQ_PROJECT", null), is(not(nullValue())));
+      System.getenv("IRONMQ_PROJECT"), is(not(nullValue())));
     Assume.assumeThat("IRONMQ_TOKEN should be set", 
-      System.getProperty("IRONMQ_TOKEN", null), is(not(nullValue())));
+      System.getenv("IRONMQ_TOKEN"), is(not(nullValue())));
     Assume.assumeThat("IRONMQ_CLOUD_URL should be set", 
-      System.getProperty("IRONMQ_CLOUD_URL", null), is(not(nullValue())));
+      System.getenv("IRONMQ_CLOUD_URL"), is(not(nullValue())));
     
     final String contents = "message-" + System.currentTimeMillis();
     
