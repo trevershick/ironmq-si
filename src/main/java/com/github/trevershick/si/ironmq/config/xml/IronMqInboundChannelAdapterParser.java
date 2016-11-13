@@ -1,8 +1,8 @@
 package com.github.trevershick.si.ironmq.config.xml;
 
 import org.springframework.beans.BeanMetadataElement;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.integration.config.xml.AbstractPollingInboundChannelAdapterParser;
 import org.springframework.integration.config.xml.IntegrationNamespaceUtils;
@@ -25,7 +25,7 @@ public class IronMqInboundChannelAdapterParser extends AbstractPollingInboundCha
 				IronMqParserConstants.ATTRIBUTE_EXTRACT_PAYLOAD,
 				IronMqParserConstants.PROPERTY_EXTRACT_PAYLOAD);
  		
-		final RootBeanDefinition queueNameExpressionDefinition =
+		final BeanDefinition queueNameExpressionDefinition =
 				IntegrationNamespaceUtils.createExpressionDefinitionFromValueOrExpression(
 						IronMqParserConstants.ATTRIBUTE_QUEUE_NAME, 
 						IronMqParserConstants.ATTRIBUTE_QUEUE_NAME_EXPRESSION,

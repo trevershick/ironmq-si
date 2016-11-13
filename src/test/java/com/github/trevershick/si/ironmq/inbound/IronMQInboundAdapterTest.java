@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import io.iron.ironmq.Client;
 import io.iron.ironmq.EmptyQueueException;
 import io.iron.ironmq.Queue;
@@ -15,9 +16,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.Message;
-import org.springframework.integration.core.PollableChannel;
 import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 

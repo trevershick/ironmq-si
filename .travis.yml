@@ -1,1 +1,4 @@
 language: java
+env:
+  global:
+    secure: i8MSco2rdzBxKbByp76qoKT2czIDOVPR6WUq7Sf9LUxfcAvTf4kdfoW0KkLwYXVwnpoT2mhkig6tvCEqC6rmrTCG7VvLQ0fz5gjW1XQIjv4wXbfgSR8yD7szhh/U/vRgycKrGyrMZ+97fSwIF1wGnXFchvVssIkmN7qsnIi5380=

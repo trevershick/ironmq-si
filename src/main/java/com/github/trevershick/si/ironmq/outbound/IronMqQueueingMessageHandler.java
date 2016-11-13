@@ -10,10 +10,10 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.common.LiteralExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.integration.Message;
-import org.springframework.integration.MessageHeaders;
 import org.springframework.integration.expression.ExpressionUtils;
 import org.springframework.integration.handler.AbstractMessageHandler;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 
 import com.github.trevershick.si.ironmq.IronMqClientFactory;
 import com.github.trevershick.si.ironmq.inbound.IronMqMessageHeaders;
