@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.trevershick</groupId>
   <artifactId>ironmq-si</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Iron MQ Spring Integration Extensions</name>
   <description>Inbound and Outbound Channel Adapters for Spring Integrations which
@@ -70,7 +70,7 @@
     <connection>scm:git:git@github.com:trevershick/ironmq-si.git</connection>
     <url>scm:git:git@github.com:trevershick/ironmq-si.git</url>
     <developerConnection>scm:git:git@github.com:trevershick/ironmq-si.git</developerConnection>
-    <tag>ironmq-si-3.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>
