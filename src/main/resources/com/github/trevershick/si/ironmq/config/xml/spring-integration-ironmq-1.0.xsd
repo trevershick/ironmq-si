@@ -49,6 +49,14 @@
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="ironmq-cloud-url" type="xsd:string"
+				       use="optional">
+				<xsd:annotation>
+					<xsd:documentation>
+						The cloud url to use.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -86,6 +94,14 @@
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:attribute>
+			<xsd:attribute name="reservation-in-seconds" type="xsd:int">
+				<xsd:annotation>
+					<xsd:documentation>
+						The number of seconds to reserve a message for deletion, default is 60.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			
 			<xsd:attribute name="extract-payload" default="true"
 				use="optional">
 				<xsd:annotation>

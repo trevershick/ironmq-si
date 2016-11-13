@@ -81,7 +81,7 @@ public class IronMQOutboundAdapterTest {
 
 		// assert
 		verify(mockClient).queue("queue3");
-		verify(queue).push("message3", 1000, 250, 125);
+		verify(queue).push("message3", 1000);
 	}
 	
 	
@@ -106,7 +106,7 @@ public class IronMQOutboundAdapterTest {
 
 		// assert
 		verify(mockClient).queue("queue3");
-		verify(queue,times(0)).push(anyString(),anyLong(),anyLong(),anyLong());
+		verify(queue,times(0)).push(anyString(),anyLong());
 	}
 	
 	@Test
@@ -121,7 +121,7 @@ public class IronMQOutboundAdapterTest {
 
 		// assert
 		verify(mockClient).queue("queue1");
-		verify(queue1).push("message1", 0, 0, 0);
+		verify(queue1).push("message1", 0);
 	}
 	
 	@Test
@@ -136,7 +136,7 @@ public class IronMQOutboundAdapterTest {
 
 		// assert
 		verify(mockClient).queue("queue2");
-		verify(queue).push("message2", 0, 0, 0);
+		verify(queue).push("message2", 0);
 	}
 	
 	@Test
@@ -154,7 +154,7 @@ public class IronMQOutboundAdapterTest {
 
 		// assert
 		verify(mockClient).queue("queue3");
-		verify(queue).push("message3", 0, 0, 0);
+		verify(queue).push("message3", 0);
 	}
 
 }

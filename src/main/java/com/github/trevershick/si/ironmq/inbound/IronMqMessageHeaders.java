@@ -1,10 +1,11 @@
 package com.github.trevershick.si.ironmq.inbound;
 
 public interface IronMqMessageHeaders {
-	final String PREFIX = "ironmq_";
-	final String DELAY = PREFIX + "delay";
-	final String EXPIRES_IN = PREFIX + "expiresIn";
-	final String ID = PREFIX + "id";
-	final String TIMEOUT = PREFIX + "timeout";
-	final String QUEUE = PREFIX + "queue";
+	String PREFIX = "ironmq_";
+	String DELAY = PREFIX + "delay";
+	String EXPIRES_IN = PREFIX + "expiresIn";
+	String ID = PREFIX + "id";
+	String TIMEOUT = PREFIX + "timeout";
+	String QUEUE = PREFIX + "queue";
+  String RESERVATION_ID = "ironmq_reservation_id";
 }

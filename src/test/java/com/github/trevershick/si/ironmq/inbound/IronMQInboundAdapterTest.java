@@ -81,6 +81,11 @@ public class IronMQInboundAdapterTest {
 		io.iron.ironmq.Message message = new io.iron.ironmq.Message();
 		message.setId("theid");
 		message.setBody("xxx");
+		message.setDelay(0);
+		message.setTimeout(0);
+		message.setExpiresIn(1000);
+
+
 		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
@@ -104,6 +109,11 @@ public class IronMQInboundAdapterTest {
 		io.iron.ironmq.Message message = new io.iron.ironmq.Message();
 		message.setId("theid2");
 		message.setBody("xxx2");
+		message.setDelay(0);
+		message.setTimeout(0);
+		message.setExpiresIn(1000);
+
+
 		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
@@ -128,6 +138,9 @@ public class IronMQInboundAdapterTest {
 		io.iron.ironmq.Message message = new io.iron.ironmq.Message();
 		message.setId("theid3");
 		message.setBody("xxx3");
+		message.setDelay(0);
+		message.setTimeout(0);
+		message.setExpiresIn(1000);
 		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)
@@ -154,6 +167,10 @@ public class IronMQInboundAdapterTest {
 		io.iron.ironmq.Message message = new io.iron.ironmq.Message();
 		message.setId("theidtx");
 		message.setBody("xxxtx");
+		message.setDelay(0);
+		message.setTimeout(0);
+		message.setExpiresIn(1000);
+
 		when(queue1.get()).thenReturn(message).thenThrow(EmptyQueueException.class);
 		
 		// act (done by poller)

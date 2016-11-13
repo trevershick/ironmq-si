@@ -28,9 +28,9 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>ironmq</groupId> 
-			<artifactId>ironmq</artifactId> 
-			<version>0.0.10</version> 
+			<groupId>io.iron.ironmq</groupId>
+			<artifactId>ironmq</artifactId>
+			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

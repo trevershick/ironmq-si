@@ -97,7 +97,7 @@ public class IronMqQueueingMessageHandler extends AbstractMessageHandler {
 				Gson gson = new Gson();
 		        logger.debug("send :" + gson.toJson(m));				
 			}
-			q.push(body,timeout,delay,expires);
+			q.push(body,timeout);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

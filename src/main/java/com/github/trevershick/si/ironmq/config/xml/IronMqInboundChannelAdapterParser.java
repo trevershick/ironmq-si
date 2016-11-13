@@ -24,7 +24,11 @@ public class IronMqInboundChannelAdapterParser extends AbstractPollingInboundCha
 		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element, 
 				IronMqParserConstants.ATTRIBUTE_EXTRACT_PAYLOAD,
 				IronMqParserConstants.PROPERTY_EXTRACT_PAYLOAD);
- 		
+
+		IntegrationNamespaceUtils.setValueIfAttributeDefined(builder, element,
+			IronMqParserConstants.ATTRIBUTE_RESERVATION_IN_SECONDS,
+			IronMqParserConstants.PROPERTY_RESERVATION_IN_SECONDS);
+
 		final BeanDefinition queueNameExpressionDefinition =
 				IntegrationNamespaceUtils.createExpressionDefinitionFromValueOrExpression(
 						IronMqParserConstants.ATTRIBUTE_QUEUE_NAME, 

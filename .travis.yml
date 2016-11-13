@@ -1,4 +1,13 @@
 language: java
+jdk:
+- oraclejdk7
 env:
   global:
-    secure: i8MSco2rdzBxKbByp76qoKT2czIDOVPR6WUq7Sf9LUxfcAvTf4kdfoW0KkLwYXVwnpoT2mhkig6tvCEqC6rmrTCG7VvLQ0fz5gjW1XQIjv4wXbfgSR8yD7szhh/U/vRgycKrGyrMZ+97fSwIF1wGnXFchvVssIkmN7qsnIi5380=
+  - secure: i8MSco2rdzBxKbByp76qoKT2czIDOVPR6WUq7Sf9LUxfcAvTf4kdfoW0KkLwYXVwnpoT2mhkig6tvCEqC6rmrTCG7VvLQ0fz5gjW1XQIjv4wXbfgSR8yD7szhh/U/vRgycKrGyrMZ+97fSwIF1wGnXFchvVssIkmN7qsnIi5380=
+  - secure: TNDurS/Ws/TomTVTxrTXJO0+BEq9ptvrJ9nRaXbwCVPbHyWv14CSoZCN11BY48jUXjeyfmKRoKupdtgfA4Nd/CbRQbMgMTtSlOjNe6t225uD9m96nWqIjq85hnCCQWcGLB8m1s3WjB11OVwWaIsmKYF++b220EUwZZ9/wHC3wRg=
+  - secure: EZs37s6WsxFYDo5b9dtIEf1l0gzMk2rNJi+FtMdXyy7t3nPsING2ifQ4jpd95Tb4kXWcH2OrxEUIw4XSdDk/gj7tQWYTA7xqZSGMeJBXZW0RVUxxeJzzlIPJE+JRWoqnB4/rnPAlso1C+ieZKIbgXeiMW2+/kaBCaHVulCJnqx4=
+  - secure: geTTozJ+/ugh9PJTGWJTFI0eA3HFBMniQOry4lXtb4FJPuvJRgIWJh+yyEX+qeC8/CnONVVYlSSE7KtQhIACoMU7r5noRaC9SV2afV2X+cFGulHZvOKSceJ3w70Nca9+blL+6wLUVIfnK2cu5Ws2IPFGeHZwi6hJ4jJMTZiie/k=
+  - secure: l8HzFzp9isTMEwEptuo3dDQ2UqnUSBJL9L5GDqOtVvXIqd981aUGRpFdNOKoGrziCiPTS8YGnEWg/le+gizVyRxcoDjaQpfqbVtZIpDAu7vXXzTGQ7goXl9lOIo0N9bJu4ayD1SHQq1YCo8qm6iUMgixn4kTzArXx0McfoZLZ84=
+  - secure: rOUJKHBBeiJlt2XRiMzsvwjsDiNZyXpKe4u3kuiTT3c690ABGVxsW89P0yQAFFAhbjp9IhP0XuS5KnFyipyMQoWhZ57IOm3Ao/yG5UmVj8jRdnZFW8bU9dUompGdbbfgjwfhLBgmdXGo2K4G/nhaN42FRbu3OeGEZrri0dQMg+A=
+after_success:
+- mvn clean test jacoco:report coveralls:report deploy --settings travis-settings.xml

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-ironmq="http://trevershick.github.com/schema/integration/ironmq"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://trevershick.github.com/schema/integration/ironmq http://trevershick.github.com/schema/integration/ironmq/spring-integration-ironmq.xsd">
+
+
+	<bean id="ironMqClient" factory-bean="ironMqClientFactory" factory-method="getClient"/>
+	
+	<int-ironmq:default-client-factory id="ironMqClientFactory" 
+					   ironmq-project="#{systemProperties['IRONMQ_PROJECT']}" 
+					   ironmq-token="#{systemProperties['IRONMQ_TOKEN']}"
+					   ironmq-cloud-url="#{systemProperties['IRONMQ_CLOUD_URL']}" />
+
+	<int:channel id="outboundChannel"/>
+
+	
+	<int-ironmq:outbound-channel-adapter id="queue1ByName" 
+					     queue-name="int-test" 
+					     client-factory="ironMqClientFactory" 
+					     channel="outboundChannel" />
+
+	<int:channel id="inboundChannel">
+		<int:queue />
+	</int:channel>
+
+	<int-ironmq:inbound-channel-adapter id="ironmqInQueueName"
+					    auto-startup="true"
+					    channel="inboundChannel"
+					    queue-name="int-test"
+					    reservation-in-seconds="30"
+					    client-factory="ironMqClientFactory">
+		<int:poller fixed-rate="100" />
+	</int-ironmq:inbound-channel-adapter>
+
+
+</beans>

@@ -22,6 +22,7 @@ import com.github.trevershick.si.ironmq.IronMqClientFactory;
 
 public class IronMqMessageSource extends IntegrationObjectSupport implements MessageSource<Serializable> {
 
+  private volatile int reservationInSeconds = 60;
 	private volatile boolean extractPayload = true;
 	
 	private volatile IronMqClientFactory clientFactory;
@@ -53,8 +54,15 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
 		this.extractPayload = extractPayload;
 	}
 
+  public int getReservationInSeconds() {
+    return reservationInSeconds;
+  }
 
-	@Override
+  public void setReservationInSeconds(int reservationInSeconds) {
+    this.reservationInSeconds = reservationInSeconds;
+  }
+
+  @Override
 	protected void onInit() throws Exception {
 		super.onInit();
 		if (getBeanFactory() != null) {
@@ -89,14 +97,25 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
 		}
 		try {
 		
-			io.iron.ironmq.Message message = q.get();
-
-			Message<Serializable> m = MessageBuilder.withPayload( extractPayload ? message.getBody() : message )
-					.setHeader(IronMqMessageHeaders.ID,  message.getId() )
-					.setHeader(IronMqMessageHeaders.DELAY,  message.getDelay() )
-					.setHeader(IronMqMessageHeaders.EXPIRES_IN,  message.getExpiresIn() )
-					.setHeader(IronMqMessageHeaders.TIMEOUT,  message.getTimeout() )
-					.build();
+			io.iron.ironmq.Messages messages = q.reserve(1, getReservationInSeconds());
+      if (messages.getSize() == 0) {
+        return null;
+      }
+      final io.iron.ironmq.Message message = messages.getMessage(0);
+			
+			MessageBuilder b = MessageBuilder.withPayload( extractPayload ? message.getBody() : message );
+			b.setHeader(IronMqMessageHeaders.ID, message.getId());
+      b.setHeader(IronMqMessageHeaders.RESERVATION_ID, message.getReservationId());
+			try {
+				b.setHeader(IronMqMessageHeaders.DELAY, message.getDelay());
+			} catch (Exception e) {}
+			try {
+			  b.setHeader(IronMqMessageHeaders.EXPIRES_IN, message.getExpiresIn());
+		  } catch (Exception e) {}
+			try {
+			  b.setHeader(IronMqMessageHeaders.TIMEOUT, message.getTimeout());
+		  } catch (Exception e) {}
+			final Message m = b.build();
 			
 			registerSyncOrComplete(q, message);
 
@@ -127,7 +146,9 @@ public class IronMqMessageSource extends IntegrationObjectSupport implements Mes
 		}
 
 		logger.debug("TransactionSynchronization is not active, remove message from queue.");
-		q.deleteMessage(message.getId());
+    if (message.getReservationId() != null) {
+		  q.deleteMessage(message.getId(), message.getReservationId());
+    }
 		logger.debug("TransactionSynchronization is not active, successfully removed message from the queue.");
 	}
 

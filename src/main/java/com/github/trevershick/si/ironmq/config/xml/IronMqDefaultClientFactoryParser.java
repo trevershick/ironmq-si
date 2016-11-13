@@ -15,6 +15,7 @@ public class IronMqDefaultClientFactoryParser extends AbstractBeanDefinitionPars
 		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition( IronMqDefaultClientFactory.class );
 		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_PROJECT_ID));
 		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_TOKEN));
+		builder.addConstructorArgValue(element.getAttribute(IronMqParserConstants.ATTRIBUTE_CLOUD));
 		return builder.getBeanDefinition();
 	}
 }
