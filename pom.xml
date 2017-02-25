@@ -19,6 +19,9 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <dep.spring-test.version>4.3.4.RELEASE</dep.spring-test.version>
+    <dep.spring-integration.version>4.3.5.RELEASE</dep.spring-integration.version>
+    <dep.mockito.version>2.6.2</dep.mockito.version>
   </properties>
 
   <dependencies>
@@ -37,13 +40,13 @@
     <dependency>
       <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-core</artifactId>
-      <version>4.3.5.RELEASE</version>
+      <version>${dep.spring-integration.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-stream</artifactId>
-      <version>4.3.5.RELEASE</version>
+      <version>${dep.spring-integration.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -55,13 +58,13 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.3.4.RELEASE</version>
+      <version>${dep.spring-test.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.2.15</version>
+      <version>${dep.mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -101,10 +104,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
@@ -123,7 +126,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.7.201606060606</version>
+        <version>0.7.8</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
